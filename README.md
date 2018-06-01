@@ -20,6 +20,6 @@ This is a directory for all of the R code and Landsat/drone images processed to 
 
 ## NDVI Analysis
 
-![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NVDI_score.png)
+![NDVI Score Image](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NDVI_score.png)
 
-![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NVDI_serc.png)
+![NDVI plot with SERCs plots](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NDVI_serc.png)
