@@ -16,3 +16,10 @@ This is a directory for all of the R code and Landsat/drone images processed to 
 ![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/stacked_bar1.png)
 
 ![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/stacked_bar2.png)
+
+
+## NDVI Analysis
+
+![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NVDI_score.png)
+
+![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NVDI_serc.png)
