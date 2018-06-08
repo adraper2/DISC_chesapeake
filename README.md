@@ -19,6 +19,7 @@ This is a directory for all of the R code and Landsat/drone images processed to 
 
 
 ## NDVI Analysis
+The NDVI score is calculated using the infared and red bandwidths from the Landsat OLI satellite image. The formula is (Infrared - Red) / (Infrared + Red).
 
 ![NDVI Score Image](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NDVI_score.png)
 
