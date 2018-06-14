@@ -51,7 +51,7 @@ species.map <- data.frame(species[2:9],
 rm(species); rm(utm.coor); rm(long.lat.coor.serc); rm(utm.coor.serc); rm(band4); rm(band5); rm(long.lat.coor); rm(ndvi.p)
 
 # save a user-defined dataset 
-user.species = readline(prompt="Enter a species (scam, phau, ivfr, c4, spcy, tyla, dead or bare_water): ")
+user.species = "scam" #Enter a species (scam, phau, ivfr, c4, spcy, tyla, dead or bare_water)
 curr.species.map <- species.map[which(species.map[,user.species]%in%c(NA, 0, 4,5)),c(which(names(species.map)%in%user.species),9:12)]
 
 #graph current species under landsat plots
