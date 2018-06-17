@@ -102,27 +102,11 @@ for (z in 3:10){
   training[,z] <- as.factor(training[,z])
 }
 
+save(training, file = '~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/training_set.rda')
+
 #graph current species under landsat plots
 ggplot() + 
   geom_rect(data=species.map, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 20)/30, ymin=(northing -min(training$northing))/30, ymax=(northing -min(training$northing) + 20)/30, fill = as.factor(unlist(species.map[1]))), color=NA) +
   labs(title=paste("Population Abundance"), x="X (30m increment)", y="Y (30m increment)", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 30)/30, ymin=(northing-min(training$northing))/30, ymax=(northing + 30 - min(training$northing))/30), color="black", fill = NA)
 
-
-# seperate this portion of the code into its own file
-rm(model)
-curr.species = 'phau'
-current <- training[,which(names(training)==curr.species)]
-samp <- sample(nrow(training), .6 * nrow(training))
-train <- training[samp,]
-test <- training[-samp,]
-
-model = randomForest(as.factor(phau) ~ .,data = train[,-c(1:2)], keep.forest=TRUE)
-
-model
-
-plot(model)
-varImpPlot(model)
-
-pred <- predict(model, newdata = test)
-table(pred, test$phau)
