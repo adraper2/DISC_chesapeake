@@ -1,6 +1,7 @@
 # Aidan Draper
 # May 27, 2018
 # R Script to visualize maximum and minimum cover of a species in order to build training sets for the classifiers
+# Note: This method did not work...
 
 rm(list=ls())
 
