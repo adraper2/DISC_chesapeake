@@ -16,6 +16,19 @@ This is a directory for all of the R code and Landsat/drone images processed to 
 ## Descriptive Plots
 
 ```R
+# Google Maps Visual
+plot.map <- get_map(location = c(-76.54616, 38.87471), maptype = "hybrid", source = "google", zoom = 16)
+
+ggmap(plot.map) + 
+  geom_point(data = species.map, 
+                             aes(x=lat, 
+                                 y = lon, 
+                                 color = species.map$species)) +
+  theme(legend.position="none")
+```
+![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/chesapeake_plot.png)
+
+```R
 # stacked bar visual 1 - species distribution comparison
 ggplot(data=bar.plot.data[bar.plot.data$order !="NA",], aes(x = order, fill=species)) + 
   geom_bar(stat="count") + 
@@ -23,10 +36,16 @@ ggplot(data=bar.plot.data[bar.plot.data$order !="NA",], aes(x = order, fill=spec
   scale_fill_brewer(palette = 5) +
   labs(title = "Species Distribution in the Chesapeake Bay", fill="Species", x="Denisty of Population (ordinal)", y="Frequency")
 ```
-![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/chesapeake_plot.png)
-
 ![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/stacked_bar1.png)
 
+```R
+# stacked bar visual 2 - population density comparison  
+ggplot(data=bar.plot.data[bar.plot.data$order !="NA",], aes(x = species, fill=order)) + 
+  geom_bar(stat="count") + 
+  coord_flip() + 
+  scale_fill_brewer() +
+  labs(title = "Species Density (per plot) in the Chesapeake Bay", fill="Pop. Density", x="Species", y="Frequency")
+```
 ![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/stacked_bar2.png)
 
 
