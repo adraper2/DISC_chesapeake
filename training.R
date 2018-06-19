@@ -70,7 +70,7 @@ rm(species, long.lat.coor.serc, utm.coor.serc)
 
 
 
-training <- data.frame(easting = numeric(1457), northing = numeric(1457), 
+training <- data.frame(plot.id = numeric(1457), easting = numeric(1457), northing = numeric(1457), overlap = numeric(1457),
                        scam = numeric(1457), ivfr = numeric(1457), c4 = numeric(1457), phau = numeric(1457), 
                        spcy = numeric(1457), tyla = numeric(1457), dead= numeric(1457), bare_water = numeric(1457),
                        band2 = numeric(1457), band3 = numeric(1457), band4 = numeric(1457), band5 = numeric(1457), 
@@ -81,9 +81,23 @@ for(i in 1:nrow(full.data)){
   for (j in 1:nrow(species.map)){
     if (species.map[j,11] - full.data[i,1] < 30 & species.map[j,11] - full.data[i,1] > -20 & 
                   species.map[j,12] - full.data[i,2] < 30 & species.map[j,12] - full.data[i,2] > -20){
-      #training <- rbind(training, c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10]))
       count = count + 1
-      training[count,] <- c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10])
+      training$plot.id[count] <- i 
+      training[count,-c(1,3)] <- c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10])
+      if(species.map[j,11] - full.data[i,1] < 0){
+        # starting x point is outside landast
+        x.overlap <- (species.map[j,11] + 20) - full.data[i,1]
+      } else {
+        x.overlap <- (full.data[i,1] + 30) - species.map[j,11]
+      }
+      if(species.map[j,12] - full.data[i,2] < 0){
+        # starting y point is outside landast
+        y.overlap <- (species.map[j,12] + 20) - full.data[i,2]
+      } else {
+        y.overlap <- (full.data[i,2] + 30) - species.map[j,12]
+      }
+      #cat("Overlap Area: ", (x.overlap * y.overlap) / 900, "\n")
+      training$overlap[count] <- (x.overlap * y.overlap) / (30*30) # SERC plot overlap area / Landsat area
     }
   }
 }
