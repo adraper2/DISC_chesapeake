@@ -105,7 +105,7 @@ paste("Yes count:", count)
 nrow(training)
 
 # reassign ordinal values words
-for (z in 3:10){
+for (z in 5:12){
   training[which(is.na(training[,z])),z] <- "none"
   training[which(training[,z] == 0),z] <- "few"
   training[which(training[,z] == 1),z] <- "few more"
