@@ -83,7 +83,7 @@ for(i in 1:nrow(full.data)){
                   species.map[j,12] - full.data[i,2] < 30 & species.map[j,12] - full.data[i,2] > -20){
       count = count + 1
       training$plot.id[count] <- i 
-      training[count,-c(1,3)] <- c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10])
+      training[count,-c(1,4)] <- c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10])
       if(species.map[j,11] - full.data[i,1] < 0){
         # starting x point is outside landast
         x.overlap <- (species.map[j,11] + 20) - full.data[i,1]
