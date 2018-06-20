@@ -43,6 +43,7 @@ full.data <- data.frame(x = band2[,1],
                         savi = savi.value)
 
 ggplot(data = full.data, aes(x=x, y=y)) + geom_point(aes(color = ndvi))
+ggsave("plots/ndvi_test.png")
 
 # compile the full dataframe to run
 
