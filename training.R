@@ -124,3 +124,30 @@ ggplot() +
   labs(title=paste("Population Abundance"), x="X (30m increment)", y="Y (30m increment)", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 30)/30, ymin=(northing-min(training$northing))/30, ymax=(northing + 30 - min(training$northing))/30), color="black", fill = NA)
 
+# edit scale for validation
+species.map[which(is.na(species.map[,1])),1] <- "none"
+species.map[which(species.map[,1] == 0),1] <- "few"
+species.map[which(species.map[,1] == 1),1] <- "few more"
+species.map[which(species.map[,1] == 2),1] <- "little"
+species.map[which(species.map[,1] == 3),1] <- "some"
+species.map[which(species.map[,1] == 4),1] <- "most"
+species.map[which(species.map[,1] == 5),1] <- "all"
+species.map[,z] <- as.factor(species.map[,1])
+
+# for validation after model run
+
+species.map$scam <- factor(species.map$scam, levels = c("none", "few", "few more", "little", "some", "most", "all"))
+cols = c("none"="#ceb467", "few" = "#ace5b2", "few more" = "#7aef87", "little" = "#57d165", "some" = "#21a31d", "most" = "#197f24", "all" = "#115118")
+
+
+serc.plots <- ggplot() + 
+  geom_rect(data=species.map, aes(xmin=easting, xmax=easting + 20, ymin=northing, ymax=northing + 20, fill = as.factor(unlist(species.map[1]))), color=NA) +
+  labs(title=paste("Scam Population Abundance in SERC Plots"), x="Easting", y="Northing", fill = "Cover") + 
+  geom_rect(data=training, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30), color="black", fill = NA) +
+  scale_x_continuous(limits = c(365430, 366280)) +
+  scale_y_continuous(limits = c(4303800, 4304470)) +
+  scale_fill_manual(values = cols)
+
+serc.plots
+
+ggsave("plots/prediction_validation.png")
