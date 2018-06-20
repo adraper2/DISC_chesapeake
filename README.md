@@ -59,6 +59,7 @@ The NDVI score is calculated using the infared and red bandwidths from the Lands
 ## Model
 The <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/training.R">training.R</a> file builds are training set while the <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/run_classifier.R">run_classifier.R</a> file runs the random forest algorithm on the constructed data frame, which can be accessed by loading the <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/training_set.rda">training_set.rda</a> file.
 
+### Data Manipulation and Training
 The first step was to import the bandwidths we would like to use from our Landsat GeoTIFF file. Then, we need to crop the region to focus on our SERC region and so that we are not dealing with such a large dataset. Finally, we convert the raster image to a matrix using the rasterToPoints() from the raster package.
 ```R
 # create our crop region layer
@@ -93,6 +94,9 @@ full.data <- data.frame(x = band2[,1],
 
 ggplot(data = full.data, aes(x=x, y=y)) + geom_point(aes(color = ndvi))
 ```
+Here is a visual of our NDVI score to make sure the plot region is correctly constrained and that the score fluxuates enough. In both cases, this was true for our NDVI score and crop layer.
+![ndvi plot](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/score_test.png)
+
 
 ### Model Results:
 ![model results](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison.png)
