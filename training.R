@@ -44,7 +44,7 @@ full.data <- data.frame(x = band2[,1],
 
 ggplot(data = full.data, aes(x=x, y=y)) + geom_point(aes(color = ndvi))
 
-# copile the full dataframe to run
+# compile the full dataframe to run
 
 # Species Map Import 
 species <- read.csv("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/DominantSpPerPlot.csv")
