@@ -95,7 +95,7 @@ full.data <- data.frame(x = band2[,1],
 ggplot(data = full.data, aes(x=x, y=y)) + geom_point(aes(color = ndvi))
 ```
 Here is a visual of our NDVI score to make sure the plot region is correctly constrained and that the score fluxuates enough. In both cases, this was true for our NDVI score and crop layer.
-![ndvi plot](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/score_test.png)
+![ndvi plot](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/ndvi_test.png)
 
 
 ### Model Results:
