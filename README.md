@@ -9,25 +9,23 @@ In order to do so, a Biology student from Notre Dame, Luke Onken, and I have ana
 
 40+ years of images would allow us to analyze sedge and grass population abundance over a long period of time in the hopes of analyzing significant species change. Specifically, the phragmites population is of interest. <a href = "http://www.cheswildlife.org/2015/05/phragmites-control-in-maryland/"> Phragmites</a> is an invasive species to the Chesapeake Bay area, as well as the Connecticut coast, Ontario, Ohio and many more areas around Eastern United States and Cananda. It has been known to grow in abundance and suffocate other species grass and sedge out of areas. This shift in grass populations has the power to disrupt the ecosystems in several ways, including _____.
 
-## Classifying sedge and grass plots using satellite image processing
-This is a directory for all of the R code and Landsat/drone images processed to classify sedge and grass plots in the Chesapeake Bay.
 
-
-## Descriptive Plots
-
+## Initial Analysis and Descriptive Plots
+This visual shows the approximate location in Latitude and Longitude of the SERC marshland region that we will be investigating. The map is produced using the ggamps and maps packages from Google. The dots represent the most dominant grass species within a 20 by 20 meter plot. 
 ```R
 # Google Maps Visual
 plot.map <- get_map(location = c(-76.54616, 38.87471), maptype = "hybrid", source = "google", zoom = 16)
 
 ggmap(plot.map) + 
   geom_point(data = species.map, 
-                             aes(x=lat, 
-                                 y = lon, 
+                             aes(x=lon, 
+                                 y = lat, 
                                  color = species.map$species)) +
   theme(legend.position="none")
 ```
 ![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/chesapeake_plot.png)
 
+Below are two stacked bar graphs to show the overall distribution of the dataset. The first visual shows which species should be easiest to classify based on the overall size of their bars and how large of boxes their extremes (0 - 1 and 4 - 5) are. The second plot shows the overall distribution of the ordinal scores. As expected, having no species present is the most prevelant group.
 ```R
 # stacked bar visual 1 - species distribution comparison
 ggplot(data=bar.plot.data[bar.plot.data$order !="NA",], aes(x = order, fill=species)) + 
