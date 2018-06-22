@@ -46,14 +46,6 @@ ggplot(data=bar.plot.data[bar.plot.data$order !="NA",], aes(x = species, fill=or
 ```
 ![alt text](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/stacked_bar2.png)
 
-
-## NDVI Analysis
-The NDVI score is calculated using the infared and red bandwidths from the Landsat OLI satellite image. The formula is (Infrared - Red) / (Infrared + Red). This formula is a particularily useful plot to use because of the great shift of light reflectance observed from Red to Near Infrared for vegetation in satellite images. This number helps observe rates of photosynthesis, which differ across grass species depending on the time of the year. NDVI is one of the crucial covariates to classifying marshland grass species.
-
-![NDVI Score Image](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NDVI_score.png)
-
-![NDVI plot with SERCs plots](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/NDVI_serc.png)
-
 ## Model
 The <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/training.R">training.R</a> file builds are training set while the <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/run_classifier.R">run_classifier.R</a> file runs the random forest algorithm on the constructed data frame, which can be accessed by loading the <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/training_set.rda">training_set.rda</a> file.
 
