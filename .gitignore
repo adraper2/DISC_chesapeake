@@ -3,3 +3,5 @@ Landsat8
 Landsat8/*
 remote_sense.R
 scam_training.csv
+Sentinel2
+Sentinel2/*

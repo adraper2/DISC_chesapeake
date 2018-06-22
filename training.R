@@ -8,7 +8,6 @@ library(raster)
 library(magrittr)
 library(rgdal)
 library(ggplot2)
-library(randomForest)
 
 
 setwd("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/Landsat8/LC08_L1TP_015033_20160718_20170222_01_T1")

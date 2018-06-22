@@ -71,3 +71,4 @@ ggsave("plots/prediction_visual2.png")
 # need to run training.R concurrently
 grid.arrange(serc.plots, pred2.graph, ncol=2)
 ggsave("plots/plot_comparison.png", arrangeGrob(serc.plots, pred2.graph, ncol=2), width = 11)
+
