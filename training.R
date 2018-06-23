@@ -10,17 +10,17 @@ library(rgdal)
 library(ggplot2)
 
 
-setwd("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/Landsat8/LC08_L1TP_015033_20160718_20170222_01_T1")
+setwd("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/")
 
 # create our crop region layer
 e <- as(extent(365375, 366400, 4303600, 4304800), 'SpatialPolygons')
 crs(e) <- "+proj=utm +zone=18"
 
 # import bands, crop them to the SERC region and raster to a data frame
-band2 <- "LC08_L1TP_015033_20160718_20170222_01_T1_B2.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
-band3 <- "LC08_L1TP_015033_20160718_20170222_01_T1_B3.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
-band4 <- "LC08_L1TP_015033_20160718_20170222_01_T1_B4.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
-band5 <- "LC08_L1TP_015033_20160718_20170222_01_T1_B5.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
+band2 <- "Landsat8/LC08_L1TP_015033_20160718_20170222_01_T1/LC08_L1TP_015033_20160718_20170222_01_T1_B2.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
+band3 <- "Landsat8/LC08_L1TP_015033_20160718_20170222_01_T1/LC08_L1TP_015033_20160718_20170222_01_T1_B3.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
+band4 <- "Landsat8/LC08_L1TP_015033_20160718_20170222_01_T1/LC08_L1TP_015033_20160718_20170222_01_T1_B4.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
+band5 <- "Landsat8/LC08_L1TP_015033_20160718_20170222_01_T1/LC08_L1TP_015033_20160718_20170222_01_T1_B5.TIF" %>% raster() %>% crop(y = e) %>% rasterToPoints()
 
 # NEED TO DOWNLOAD ARCMAP AND CREATE A .SHP FILE TO MASK THE PLOT TO (too much data currently)
 
@@ -120,28 +120,28 @@ save(training, file = '~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/training
 
 #graph current species under landsat plots
 ggplot() + 
-  geom_rect(data=species.map, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 20)/30, ymin=(northing -min(training$northing))/30, ymax=(northing -min(training$northing) + 20)/30, fill = as.factor(unlist(species.map[1]))), color=NA) +
+  geom_rect(data=species.map, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 20)/30, ymin=(northing -min(training$northing))/30, ymax=(northing -min(training$northing) + 20)/30, fill = as.factor(unlist(species.map[2]))), color=NA) +
   labs(title=paste("Population Abundance"), x="X (30m increment)", y="Y (30m increment)", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 30)/30, ymin=(northing-min(training$northing))/30, ymax=(northing + 30 - min(training$northing))/30), color="black", fill = NA)
 
 # edit scale for validation
-species.map[which(is.na(species.map[,1])),1] <- "none"
-species.map[which(species.map[,1] == 0),1] <- "few"
-species.map[which(species.map[,1] == 1),1] <- "few more"
-species.map[which(species.map[,1] == 2),1] <- "little"
-species.map[which(species.map[,1] == 3),1] <- "some"
-species.map[which(species.map[,1] == 4),1] <- "most"
-species.map[which(species.map[,1] == 5),1] <- "all"
-species.map[,z] <- as.factor(species.map[,1])
+species.map[which(is.na(species.map[,4])),4] <- "none"
+species.map[which(species.map[,4] == 0),4] <- "few"
+species.map[which(species.map[,4] == 1),4] <- "few more"
+species.map[which(species.map[,4] == 2),4] <- "little"
+species.map[which(species.map[,4] == 3),4] <- "some"
+species.map[which(species.map[,4] == 4),4] <- "most"
+species.map[which(species.map[,4] == 5),4] <- "all"
+species.map[,4] <- as.factor(species.map[,4])
 
 # for validation after model run
 
-species.map$scam <- factor(species.map$scam, levels = c("none", "few", "few more", "little", "some", "most", "all"))
+species.map$phau <- factor(species.map$phau, levels = c("none", "few", "few more", "little", "some", "most", "all"))
 cols = c("none"="#ceb467", "few" = "#ace5b2", "few more" = "#7aef87", "little" = "#57d165", "some" = "#21a31d", "most" = "#197f24", "all" = "#115118")
 
 
 serc.plots <- ggplot() + 
-  geom_rect(data=species.map, aes(xmin=easting, xmax=easting + 20, ymin=northing, ymax=northing + 20, fill = as.factor(unlist(species.map[1]))), color=NA) +
+  geom_rect(data=species.map, aes(xmin=easting, xmax=easting + 20, ymin=northing, ymax=northing + 20, fill = as.factor(unlist(species.map[4]))), color=NA) +
   labs(title=paste("Scam Population Abundance in SERC Plots"), x="Easting", y="Northing", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30), color="black", fill = NA) +
   scale_x_continuous(limits = c(365430, 366280)) +

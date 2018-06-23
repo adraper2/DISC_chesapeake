@@ -13,13 +13,13 @@ load(file='training_set.rda')
 
 set.seed(2000)
 
-curr.species = 'scam'
+curr.species = 'phau'
 current <- training[,which(names(training)==curr.species)]
 samp <- sample(nrow(training), .6 * nrow(training))
 train <- training[samp,]
 test <- training[-samp,]
 
-model = randomForest(scam ~ .,data = train[,-c(1:4)], keep.forest=TRUE)
+model = randomForest(phau ~ .,data = train[,-c(1:4)], keep.forest=TRUE)
 
 model
 
@@ -39,12 +39,12 @@ pred.graph <- ggplot() +
 
 pred.graph
 
-ggsave("plots/prediction_visual1.png")
+ggsave(paste("plots/prediction_visual_",curr.species,".png", sep=""))
 
 
 
 # model comparison without less important variables
-model2 = randomForest(scam ~ .,data = train[,-c(1:4, 9, 10, 18)], keep.forest=TRUE)
+model2 = randomForest(phau ~ .,data = train[,-c(1:3,5, 9, 10, 18)], keep.forest=TRUE)
 
 model2
 
@@ -66,9 +66,9 @@ pred2.graph <- ggplot(data=test) +
 
 pred2.graph
 
-ggsave("plots/prediction_visual2.png")
+ggsave(paste("plots/prediction_visual_",curr.species,"2.png", sep=""))
 
 # need to run training.R concurrently
 grid.arrange(serc.plots, pred2.graph, ncol=2)
-ggsave("plots/plot_comparison.png", arrangeGrob(serc.plots, pred2.graph, ncol=2), width = 11)
+ggsave(paste("plots/plot_comparison_",curr.species,".png", sep=""), arrangeGrob(serc.plots, pred2.graph, ncol=2), width = 11)
 
