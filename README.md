@@ -119,13 +119,14 @@ Now, the plot overlap calculation actually provides an interesting case.
 This figure describes the two cases within our scenario. The tan box represent the SERC 20 by 20 meter plot and the white box represents the 30 by 30 meter plot. The red area represents the overlap in both plots, which is what we want to find. The blue circles are the starting x and y coordinates that I have for each plot. We need to use both sets of x and y coordinates and our knowledge about the lengths of the plots to find the percent of overlap that the SERC plot has on the Landsat plot. So, to calculate this, we used the code below.
 
 ```R
+#initialize our empty training set with our variables (columns) of interest
 training <- data.frame(plot.id = numeric(1457), easting = numeric(1457), northing = numeric(1457), overlap = numeric(1457),
                        scam = numeric(1457), ivfr = numeric(1457), c4 = numeric(1457), phau = numeric(1457), 
                        spcy = numeric(1457), tyla = numeric(1457), dead= numeric(1457), bare_water = numeric(1457),
                        band2 = numeric(1457), band3 = numeric(1457), band4 = numeric(1457), band5 = numeric(1457), 
                        ndvi = numeric(1457), evi = numeric(1457), ndwi = numeric(1457), savi = numeric(1457))
 
-count <- 0
+count <- 0 # the number of times a plot will overlap
 for(i in 1:nrow(full.data)){
   for (j in 1:nrow(species.map)){
     if (species.map[j,11] - full.data[i,1] < 30 & species.map[j,11] - full.data[i,1] > -20 & 
@@ -154,7 +155,7 @@ paste("Yes count:", count)
 nrow(training)
 ```
 
-The double for loop indexes the current rows for each dataset that we are using to grab the x and y coordinates. You can ignore lines 84, 85, and 86. The rest comprises the overlap calculation algorithm. The first if statement says that if the difference between the x of both plots and the difference between the y of both plots are between -20 and 30 exclusively, then do the next steps. This if statement will tell us whether the plots overlap to begin with because we do not want to waste our time doing extra steps if they are not neccessary. Next, we need to find out whether we have case 1 or case 2. We do this separately for x and y but, in truth, if x of one plot is in the other’s plot so will the y of that plot. This code setup is just slightly easier to read. Anyway, a negative number indicates that the SERC plot is outside the Landsat plot, which means we need to use the opposite corner of the SERC plot. We find the length of the red boxes wall by finding the difference between the “new” x and y of one plot and the original x and y of the other. Then, we can calculate the area of this box by multiple our x and y overlap lengths. Finally, we just divide that by the total area of the Landsat plot and that gives us a decimal number from 0 to 1 representing the proportion of plot overlap.
+The double for loop indexes the current rows for each dataset that we are using to grab the x and y coordinates. The rest comprises the overlap calculation algorithm. The first if statement says that if the difference between the x of both plots and the difference between the y of both plots are between -20 and 30 exclusively, then do the next steps. This if statement will tell us whether the plots overlap to begin with because we do not want to waste our time doing extra steps if they are not neccessary. Next, we need to find out whether we have case 1 or case 2. We do this separately for x and y but, in truth, if x of one plot is in the other’s plot so will the y of that plot. This code setup is just slightly easier to read. Anyway, a negative number indicates that the SERC plot is outside the Landsat plot, which means we need to use the opposite corner of the SERC plot. We find the length of the red boxes wall by finding the difference between the “new” x and y of one plot and the original x and y of the other. Then, we can calculate the area of this box by multiple our x and y overlap lengths. Finally, we just divide that by the total area of the Landsat plot and that gives us a decimal number from 0 to 1 representing the proportion of plot overlap.
 
 
 ### Model Results:
