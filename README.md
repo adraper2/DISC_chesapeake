@@ -115,7 +115,7 @@ species.map <- data.frame(species[2:9],
 Now that we have this data, we can calculate the overlap between the Smithsonian's plots and the Landsat plots. While we likely will not use this variable as a covariate in our final model, it serves as a good indicator of the weight that an ordinal plot should have on our classifier's predicted Landsat plot. It also presents some interesting figures about the distribution of of the proportion of overlap within our dataset. We will ellaborate on this shortly.
 
 Now, the plot overlap calculation actually provides an interesting case.
-![Plot Overlap Figure](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_overlap_figure.png)
+![Plot-Overlap-Figure](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_overlap_figure.png)
 This figure describes the two cases within our scenario. The tan box represent the SERC 20 by 20 meter plot and the white box represents the 30 by 30 meter plot. The red area represents the overlap in both plots, which is what we want to find. The blue circles are the starting x and y coordinates that I have for each plot. We need to use both sets of x and y coordinates and our knowledge about the lengths of the plots to find the percent of overlap that the SERC plot has on the Landsat plot. So, to calculate this, we used the code below.
 
 ```R
