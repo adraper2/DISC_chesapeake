@@ -87,6 +87,75 @@ ggplot(data = full.data, aes(x=x, y=y)) + geom_point(aes(color = ndvi))
 Here is a visual of our NDVI score to make sure the plot region is correctly constrained and that the score fluxuates enough. In both cases, this was true for our NDVI score and crop layer.
 ![ndvi plot](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/ndvi_test.png)
 
+The next step is to pull in the grass species data from the Smithsonian's marshland plots. This code was gradded from the <a href = "https://github.com/adraper2/DISC_chesapeake/blob/master/descriptive.R">descriptive.R</a> file and is needed for the next step, which involves calculating the plot overlap.
+```R
+# compile the full dataframe to run
+
+# Species Map Import 
+species <- read.csv("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/DominantSpPerPlot.csv")
+
+# remove plots with no location, if any
+species <- species[!is.na(species$easting),]
+species <- species[!is.na(species$northing),]
+
+# convert UTM to lat, long
+utm.coor.serc <- SpatialPoints(cbind(species$easting,species$northing), 
+                               proj4string=CRS("+proj=utm +zone=18"))
+
+# Convert to lat/long
+long.lat.coor.serc <- as.data.frame(spTransform(utm.coor.serc,CRS("+proj=longlat")))
+
+species.map <- data.frame(species[2:9],
+                          lat = long.lat.coor.serc$coords.x1,
+                          lon = long.lat.coor.serc$coords.x2,
+                          easting = utm.coor.serc$coords.x1,
+                          northing = utm.coor.serc$coords.x2)
+```
+
+Now that we have this data, we can calculate the overlap between the Smithsonian's plots and the Landsat plots. While we likely will not use this variable as a covariate in our final model, it serves as a good indicator of the weight that an ordinal plot should have on our classifier's predicted Landsat plot. It also presents some interesting figures about the distribution of of the proportion of overlap within our dataset. We will ellaborate on this shortly.
+
+Now, the plot overlap calculation actually provides an interesting case.
+![Plot Overlap Figure](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_overlap_figure.png)
+This figure describes the two cases within our scenario. The tan box represent the SERC 20 by 20 meter plot and the white box represents the 30 by 30 meter plot. The red area represents the overlap in both plots, which is what we want to find. The blue circles are the starting x and y coordinates that I have for each plot. We need to use both sets of x and y coordinates and our knowledge about the lengths of the plots to find the percent of overlap that the SERC plot has on the Landsat plot. So, to calculate this, we used the code below.
+
+```R
+training <- data.frame(plot.id = numeric(1457), easting = numeric(1457), northing = numeric(1457), overlap = numeric(1457),
+                       scam = numeric(1457), ivfr = numeric(1457), c4 = numeric(1457), phau = numeric(1457), 
+                       spcy = numeric(1457), tyla = numeric(1457), dead= numeric(1457), bare_water = numeric(1457),
+                       band2 = numeric(1457), band3 = numeric(1457), band4 = numeric(1457), band5 = numeric(1457), 
+                       ndvi = numeric(1457), evi = numeric(1457), ndwi = numeric(1457), savi = numeric(1457))
+
+count <- 0
+for(i in 1:nrow(full.data)){
+  for (j in 1:nrow(species.map)){
+    if (species.map[j,11] - full.data[i,1] < 30 & species.map[j,11] - full.data[i,1] > -20 & 
+                  species.map[j,12] - full.data[i,2] < 30 & species.map[j,12] - full.data[i,2] > -20){
+      count = count + 1
+      training$plot.id[count] <- i 
+      training[count,-c(1,4)] <- c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10])
+      if(species.map[j,11] - full.data[i,1] < 0){
+        # starting x point is outside landast
+        x.overlap <- (species.map[j,11] + 20) - full.data[i,1]
+      } else {
+        x.overlap <- (full.data[i,1] + 30) - species.map[j,11]
+      }
+      if(species.map[j,12] - full.data[i,2] < 0){
+        # starting y point is outside landast
+        y.overlap <- (species.map[j,12] + 20) - full.data[i,2]
+      } else {
+        y.overlap <- (full.data[i,2] + 30) - species.map[j,12]
+      }
+      #cat("Overlap Area: ", (x.overlap * y.overlap) / 900, "\n")
+      training$overlap[count] <- (x.overlap * y.overlap) / (30*30) # SERC plot overlap area / Landsat area
+    }
+  }
+}
+paste("Yes count:", count)
+nrow(training)
+```
+
+The double for loop indexes the current rows for each dataset that we are using to grab the x and y coordinates. You can ignore lines 84, 85, and 86. The rest comprises the overlap calculation algorithm. The first if statement says that if the difference between the x of both plots and the difference between the y of both plots are between -20 and 30 exclusively, then do the next steps. This if statement will tell us whether the plots overlap to begin with because we do not want to waste our time doing extra steps if they are not neccessary. Next, we need to find out whether we have case 1 or case 2. We do this separately for x and y but, in truth, if x of one plot is in the other’s plot so will the y of that plot. This code setup is just slightly easier to read. Anyway, a negative number indicates that the SERC plot is outside the Landsat plot, which means we need to use the opposite corner of the SERC plot. We find the length of the red boxes wall by finding the difference between the “new” x and y of one plot and the original x and y of the other. Then, we can calculate the area of this box by multiple our x and y overlap lengths. Finally, we just divide that by the total area of the Landsat plot and that gives us a decimal number from 0 to 1 representing the proportion of plot overlap.
+
 
 ### Model Results:
 ![model results](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison.png)
