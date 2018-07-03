@@ -114,8 +114,10 @@ species.map <- data.frame(species[2:9],
 
 Now that we have this data, we can calculate the overlap between the Smithsonian's plots and the Landsat plots. While we likely will not use this variable as a covariate in our final model, it serves as a good indicator of the weight that an ordinal plot should have on our classifier's predicted Landsat plot. It also presents some interesting figures about the distribution of of the proportion of overlap within our dataset. We will ellaborate on this shortly.
 
-Now, the plot overlap calculation actually provides an interesting case.
+The plot overlap calculation actually provides an interesting case.
+
 ![Plot-Overlap-Figure](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_overlap_figure.png)
+
 This figure describes the two cases within our scenario. The tan box represent the SERC 20 by 20 meter plot and the white box represents the 30 by 30 meter plot. The red area represents the overlap in both plots, which is what we want to find. The blue circles are the starting x and y coordinates that I have for each plot. We need to use both sets of x and y coordinates and our knowledge about the lengths of the plots to find the percent of overlap that the SERC plot has on the Landsat plot. So, to calculate this, we used the code below.
 
 ```R
@@ -161,3 +163,5 @@ The double for loop indexes the current rows for each dataset that we are using 
 ### Model Results:
 ![model results](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison.png)
 Here are our results of the finalized model (on the right) trained just on Landsat data compared to the original SERC ordinal data for Scam with the Landsat plot gridlines layed overtop (on the left). As you could see from our previous tables and OOB error percentage, it seemed the classifier is good at classifying no species population within a plot, but rather poor at predicting levels of ordinal data. With that being said, when we predicted the remaining 40% of our plots, it became apparent that the random forest classifier was rather good at averaging plot ordinal scores across multiple SERC plots within one Landsat plot. This tells us that the model was trained well enough on the 60% of the data we fed it to detect the "relative" true scores of population abundance. There is still some noise, but the classifier does a good job at predicting orders given its training and our actual plot data. Interestingly enough, the classifier never predicted all. This is actually a good sign for two reasons. For starters, it was only trained on one row that scored it as "all". Additionally, only one plot within the prediction dataset contained an "all" for scam, but there is some skepticim to the rest of the area within the plot, which most likely was not all scam. For these reasons, it is not that concerning that the model lacks the result of "all" for scam.
+
+![model results phau](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison_phau.png)
