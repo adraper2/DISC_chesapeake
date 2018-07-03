@@ -42,7 +42,7 @@ full.data <- data.frame(x = band2[,1],
                         savi = savi.value)
 
 ggplot(data = full.data, aes(x=x, y=y)) + geom_point(aes(color = ndvi))
-ggsave("plots/ndvi_test.png")
+# ggsave("plots/ndvi_test.png")
 
 # compile the full dataframe to run
 
@@ -116,7 +116,7 @@ for (z in 5:12){
   training[,z] <- as.factor(training[,z])
 }
 
-save(training, file = '~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/training_set.rda')
+# save(training, file = '~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/training_set.rda')
 
 #graph current species under landsat plots
 ggplot() + 
@@ -142,7 +142,7 @@ cols = c("none"="#ceb467", "few" = "#ace5b2", "few more" = "#7aef87", "little" =
 
 serc.plots <- ggplot() + 
   geom_rect(data=species.map, aes(xmin=easting, xmax=easting + 20, ymin=northing, ymax=northing + 20, fill = as.factor(unlist(species.map[4]))), color=NA) +
-  labs(title=paste("Scam Population Abundance in SERC Plots"), x="Easting", y="Northing", fill = "Cover") + 
+  labs(title=paste("phau Population Abundance in SERC Plots"), x="Easting", y="Northing", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30), color="black", fill = NA) +
   scale_x_continuous(limits = c(365430, 366280)) +
   scale_y_continuous(limits = c(4303800, 4304470)) +
