@@ -23,7 +23,7 @@ model = randomForest(phau ~ .,data = train[,-c(1:4,5:7,9:12,18)], keep.forest=TR
 
 model
 
-save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
+#save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
 
 plot(model)
 varImpPlot(model)
