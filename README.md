@@ -159,6 +159,25 @@ nrow(training)
 
 The double for loop indexes the current rows for each dataset that we are using to grab the x and y coordinates. The rest comprises the overlap calculation algorithm. The first if statement says that if the difference between the x of both plots and the difference between the y of both plots are between -20 and 30 exclusively, then do the next steps. This if statement will tell us whether the plots overlap to begin with because we do not want to waste our time doing extra steps if they are not neccessary. Next, we need to find out whether we have case 1 or case 2. We do this separately for x and y but, in truth, if x of one plot is in the other’s plot so will the y of that plot. This code setup is just slightly easier to read. Anyway, a negative number indicates that the SERC plot is outside the Landsat plot, which means we need to use the opposite corner of the SERC plot. We find the length of the red boxes wall by finding the difference between the “new” x and y of one plot and the original x and y of the other. Then, we can calculate the area of this box by multiple our x and y overlap lengths. Finally, we just divide that by the total area of the Landsat plot and that gives us a decimal number from 0 to 1 representing the proportion of plot overlap.
 
+That essentially wraps up our training set. The last two steps I am about to show are optional. The first step assigns a character string to each ordinal group. However, it has actually been pointed out to me that "few" and "little" are hard to differentiate so my recommendation would be to relabel them by their scales, like "less than 1%" or "1-20%", for more clarification. Again, this step is not necessary so long as you change the integers to factors before you run your final model. The last step is to save your training set, which I saved into the training_set.rda file I mentioned at the beginning of this section. I would advise saving the file to make running the model more straightforward. 
+
+```R
+# reassign ordinal values words
+for (z in 5:12){
+  training[which(is.na(training[,z])),z] <- "none" # or 0%
+  training[which(training[,z] == 0),z] <- "few" # or less than 1% and so on
+  training[which(training[,z] == 1),z] <- "few more"
+  training[which(training[,z] == 2),z] <- "little"
+  training[which(training[,z] == 3),z] <- "some"
+  training[which(training[,z] == 4),z] <- "most"
+  training[which(training[,z] == 5),z] <- "all"
+  training[,z] <- as.factor(training[,z])
+}
+
+save(training, file = '~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/training_set.rda')
+```
+
+This concludes the creation of our training set. You're essentially half of the way there! 
 
 ### Model Results:
 ![model results](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison.png)
