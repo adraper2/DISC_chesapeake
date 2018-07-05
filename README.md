@@ -7,7 +7,7 @@ This is an on going research area in the McLachlan Lab at the University of Notr
 
 In order to do so, a Biology student from Notre Dame, Luke Onken, and I have analyzed Landsat 8 OLI Satellite image data. The satellites orbit the Earth in roughly two week increments. Landsat images are particularly useful because they have been flying since 1972 when the <a href = "https://en.wikipedia.org/wiki/Landsat_program">Earth Resources Technology Satellite</a> (later renamed landsat) was first launched. 
 
-40+ years of images would allow us to analyze sedge and grass population abundance over a long period of time in the hopes of analyzing significant species change. Specifically, the phragmites population is of interest. <a href = "http://www.cheswildlife.org/2015/05/phragmites-control-in-maryland/"> Phragmites</a> is an invasive species to the Chesapeake Bay area, as well as the Connecticut coast, Ontario, Ohio and many more areas around Eastern United States and Cananda. It has been known to grow in abundance and suffocate other species grass and sedge out of areas. This shift in grass populations has the power to disrupt the ecosystems in several ways, including _____.
+40+ years of images would allow us to analyze sedge and grass population abundance over a long period of time in the hopes of analyzing significant species change. Specifically, the phragmites population is of interest. <a href = "http://www.cheswildlife.org/2015/05/phragmites-control-in-maryland/"> Phragmites</a> is an invasive species to the Chesapeake Bay area, as well as the Connecticut coast, Ontario, Ohio and many more areas around Eastern United States and Cananda. It has been known to grow in abundance and suffocate other species grass and sedge out of areas. This shift in grass populations has the power to disrupt the ecosystems in several ways, including posing more forest fire risk during dry seasons, inducing the erosion of soil composition from a lack of roots, and causing the extinction of certain plants or animals that rely on these grasses.
 
 
 ## Initial Analysis and Descriptive Plots
@@ -159,7 +159,7 @@ nrow(training)
 
 The double for loop indexes the current rows for each dataset that we are using to grab the x and y coordinates. The rest comprises the overlap calculation algorithm. The first if statement says that if the difference between the x of both plots and the difference between the y of both plots are between -20 and 30 exclusively, then do the next steps. This if statement will tell us whether the plots overlap to begin with because we do not want to waste our time doing extra steps if they are not neccessary. Next, we need to find out whether we have case 1 or case 2. We do this separately for x and y but, in truth, if x of one plot is in the other’s plot so will the y of that plot. This code setup is just slightly easier to read. Anyway, a negative number indicates that the SERC plot is outside the Landsat plot, which means we need to use the opposite corner of the SERC plot. We find the length of the red boxes wall by finding the difference between the “new” x and y of one plot and the original x and y of the other. Then, we can calculate the area of this box by multiple our x and y overlap lengths. Finally, we just divide that by the total area of the Landsat plot and that gives us a decimal number from 0 to 1 representing the proportion of plot overlap.
 
-That essentially wraps up our training set. The last two steps I am about to show are optional. The first step assigns a character string to each ordinal group. However, it has actually been pointed out to me that "few" and "little" are hard to differentiate so my recommendation would be to relabel them by their scales, like "less than 1%" or "1-20%", for more clarification. Again, this step is not necessary so long as you change the integers to factors before you run your final model. The last step is to save your training set, which I saved into the training_set.rda file I mentioned at the beginning of this section. I would advise saving the file to make running the model more straightforward. 
+That essentially wraps up our training set. The last two steps I am about to show are optional. The first step assigns a character string to each ordinal group. However, it has actually been pointed out to me that "few" and "little" are hard to differentiate so my recommendation would be to relabel them by their scales, like "less than 1%" or "1-20%", for more clarification. Again, this step is not necessary so long as you change the integers to factors before you run your final model. The last step is to save your training set, which I saved into the <a href="https://github.com/adraper2/DISC_chesapeake/blob/master/training_set.rda">training_set.rda</a> file I mentioned at the beginning of this section. I would advise saving the file to make running the model more straightforward. 
 
 ```R
 # reassign ordinal values words
@@ -179,8 +179,33 @@ save(training, file = '~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/training
 
 This concludes the creation of our training set. You're essentially half of the way there! 
 
+### Running the Model
+Navigate to the <a href="https://github.com/adraper2/DISC_chesapeake/blob/master/run_classifier.R">run_classifier.R</a> file. The first step in our model will be to set our primary working directory, load our training set in and select a species to investigate. Because we've been talking about phragmites in the introduction, I will use "phau" for this walkthrough.
+```R
+setwd("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/")
+load(file='training_set.rda')
+
+set.seed(2000) # if you want the same results as me, set your random seed to 2000
+
+curr.species = 'phau' # select the species you want to investigate
+```
+
+Now, it is time to create our first classifier. In supervised machine learning algorithms, you generally want to train your models on over a majority of the data. Some even argue that as much as 80% of the data should be used and only 20% should be used for validation. In this case, we train the model on 60% of the ordinal data and then predict 40% of the plot data. We create "samp", which is a vector of integers that represent what rows we shall grab from our training set for the 60% of training. Then, we create a subset dataframe of our training set called train. Test is the remaining 40% of our data that we shall use later for our model validation. The following step runs the model. If you have ever run a regression model. You might recognize the formula "phau ~ .". This just says that our variable phau is dependent on all of the other columns in the train dataframe. You may notice "data = train[...]", which indexes and removes some of the columns we have decide to disclude from our robust model. These variables include plot overlap, the SERC ordinal data of other species, longitude/latitude, and northing/easting. "keep.forest = TRUE" allows us to access this model later for predictions. 
+```R
+samp <- sample(nrow(training), .6 * nrow(training))
+train <- training[samp,]
+test <- training[-samp,]
+
+model = randomForest(phau ~ .,data = train[,-c(1:4,5:7,9:12,18)], keep.forest=TRUE)
+
+model
+
+save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep="")) # save your model for future predictions if you'd like
+```
+You will see the out of bag error and class error of our model when you run "model". Do not be discouraged by the low number. I imagine that the out of bag error will be around 50%, which should mean that the model guesses the ordinal ranks incorrectly 50% of the time. Class error normally tells us how well it predicts an ordinal class. With that being said, it may be checking its prediction on an ordinal rank that represents a tiny proportion of the Landsat plot. Try running "hist(training$overlap)". Notice how right-skewed our data is. Almost half our data has ordinal scores that represent less than 10% of the landsat plot they are in. This leads to some skepticism in our model, but also reassures us that our model is not as unaccurate as it thinks it is. This will become more evident when we produce our visuals in the following section.
+
 ### Model Results:
 ![model results](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison.png)
 Here are our results of the finalized model (on the right) trained just on Landsat data compared to the original SERC ordinal data for Scam with the Landsat plot gridlines layed overtop (on the left). As you could see from our previous tables and OOB error percentage, it seemed the classifier is good at classifying no species population within a plot, but rather poor at predicting levels of ordinal data. With that being said, when we predicted the remaining 40% of our plots, it became apparent that the random forest classifier was rather good at averaging plot ordinal scores across multiple SERC plots within one Landsat plot. This tells us that the model was trained well enough on the 60% of the data we fed it to detect the "relative" true scores of population abundance. There is still some noise, but the classifier does a good job at predicting orders given its training and our actual plot data. Interestingly enough, the classifier never predicted all. This is actually a good sign for two reasons. For starters, it was only trained on one row that scored it as "all". Additionally, only one plot within the prediction dataset contained an "all" for scam, but there is some skepticim to the rest of the area within the plot, which most likely was not all scam. For these reasons, it is not that concerning that the model lacks the result of "all" for scam.
 
-![model results phau](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison_phau.png)
+![model results phau](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plot_comparison_phau2.png)
