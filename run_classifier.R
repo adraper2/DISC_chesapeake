@@ -40,8 +40,9 @@ model
 
 reprtree:::plot.getTree(model) #produce the random forest tree visual
 
-save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
+#save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
 
+par(bg = '#ecf0f8f9')
 plot(model)
 varImpPlot(model)
 

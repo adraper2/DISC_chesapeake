@@ -40,6 +40,8 @@ species.map <- data.frame(species = species$simplifiedClass,
                           easting = utm.coor.serc$coords.x1,
                           northing = utm.coor.serc$coords.x2)
 
+species.map[which(species.map$species == ""),1] <- "no species"
+
 # basic color plot
 rgb.stack <- stack(band4, band3, band2)
 plotRGB(rgb.stack, stretch ="hist")
@@ -77,7 +79,18 @@ ggmap(plot.map) +
                              aes(x=lat, 
                                  y = lon, 
                                  color = species.map$species)) +
-  theme(legend.position="none")
+  labs(title=paste("Smithsonian Research Center's Marshland"), color="Dominant Species") +
+  theme(plot.background = element_rect(fill = '#ecf0f8f9'),
+        axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())
 
 
 #sample.ndvi.points <- ndvi.points[sample(nrow(ndvi.points), 1000), ]
