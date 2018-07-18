@@ -28,13 +28,13 @@ load(file='training_set.rda')
 
 set.seed(2000)
 
-curr.species = 'phau'
+curr.species = 'scam'
 current <- training[,which(names(training)==curr.species)]
 samp <- sample(nrow(training), .6 * nrow(training))
 train <- training[samp,]
 test <- training[-samp,]
 
-model = randomForest(phau ~ .,data = train[,-c(1:6,8:11,17)], keep.forest=TRUE)
+model = randomForest(scam ~ .,data = train[,-c(1:3,5:11,17)], keep.forest=TRUE)
 
 model
 
@@ -47,7 +47,7 @@ plot(model)
 varImpPlot(model)
 
 pred <- predict(model, newdata = test)
-table(pred, test$phau)
+table(pred, test$scam)
 
 pred <- factor(pred, levels = c("0%", "less than 1%", "1 - 5%", "6% - 25%", "26 - 50%", "51 - 75%", "76% - 100%"))
 cols = c("0%"="#ceb467", "less than 1%" = "#ace5b2", "1 - 5%" = "#7aef87", "6% - 25%" = "#57d165", "26 - 50%" = "#21a31d", "51 - 75%" = "#197f24", "76% - 100%" = "#115118")
@@ -66,16 +66,30 @@ pred.graph
 # predict all of data to see all classifications
 
 pred2 <- predict(model, newdata = training)
-table(pred2, training$phau)
+table(pred2, training$scam)
 pred2 <- factor(pred2, levels = c("0%", "less than 1%", "1 - 5%", "6% - 25%", "26 - 50%", "51 - 75%", "76% - 100%"))
-cols = c("0%"="#ceb467", "less than 1%" = "#ace5b2", "1 - 5%" = "#7aef87", "6% - 25%" = "#57d165", "26 - 50%" = "#21a31d", "51 - 75%" = "#197f24", "76% - 100%" = "#115118")
+#cols = c("0%"="#ceb467", "less than 1%" = "#ace5b2", "1 - 5%" = "#7aef87", "6% - 25%" = "#57d165", "26 - 50%" = "#21a31d", "51 - 75%" = "#197f24", "76% - 100%" = "#115118")
+
+# red scale for Phrag
+#cols = c("0%"="#ceb467", "less than 1%" = "#fce0e0", "1 - 5%" = "#ffa8a8", "6% - 25%" = "#f26a6a", "26 - 50%" = "#e83e3e", "51 - 75%" = "#c12020", "76% - 100%" = "#891818")
+
+# blue scale for scam
+cols = c("0%"="#ceb467", "less than 1%" = "#d1ddfc", "1 - 5%" = "#adc0f4", "6% - 25%" = "#8ba6f4", "26 - 50%" = "#5e82ed", "51 - 75%" = "#2c2ccc", "76% - 100%" = "#231572")
+
+
 
 pred2.graph <- ggplot() +
   geom_rect(data=training, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30, fill = as.factor(unlist(pred2))), color="black") +
-  labs(title=paste("Pop. Abundance Prediction on All of Plots"), x="Easting", y="Northing", fill="Cover") +
+  labs(title=paste("Schoenoplectus Population Classifier Predictions"),x="Easting", y="Northing", fill="Cover") +
   scale_x_continuous(limits = c(365430, 366280)) +
   scale_y_continuous(limits = c(4303800, 4304470)) + 
-  scale_fill_manual(values = cols)
+  scale_fill_manual(values = cols) + theme(plot.background = element_rect(fill = '#ecf0f8f9'),
+                                           axis.line=element_blank(),
+                                           axis.text.x=element_blank(),
+                                           axis.text.y=element_blank(),
+                                           axis.ticks=element_blank(),
+                                           axis.title.x=element_blank(),
+                                           axis.title.y=element_blank())
 
 pred2.graph
 
