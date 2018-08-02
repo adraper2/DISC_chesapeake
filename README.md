@@ -114,11 +114,32 @@ species.map <- data.frame(species[2:9],
 
 Now that we have this data, we can calculate which Smithsonian plots fall within the respective Landsat resolution spaces.
 
-![Plot Explanation](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/plots_explained.png)
+![Plot Explanation](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/explanation.jpg)
 
 This figure describes how the plots could fall within a resolution space. The tan and green boxes represent different ordinal scores that were surveyed by the Smithsonian research center. The white box encompassing the four others represent the resolution space for one light band captured from a Satellite image. For every Satellite pixel (resolution space), we may be training the model with 1 to 4 different ordinal scores. The hope is that the random forest model will be able to average these scores to make a more accurate prediction about the whole space. Although, this way of training will also mean that are trees within the model will be more complex and that our class error scores will not accurately describe the model's accuracy in predictions because it is checking its single prediction against potentially 4 different ordinal rankings depending on which plots are selected for the training set of 60% of the original dataset.
 
-That essentially wraps up our training set. The last two steps I am about to show are optional. The first step assigns a character string to each ordinal group. However, it has actually been pointed out to me that "few" and "little" are hard to differentiate so my recommendation would be to relabel them by their scales, like "less than 1%" or "1-20%", for more clarification. Again, this step is not necessary so long as you change the integers to factors before you run your final model. The last step is to save your training set, which I saved into the <a href="https://github.com/adraper2/DISC_chesapeake/blob/master/training_set.rda">training_set.rda</a> file I mentioned at the beginning of this section. I would advise saving the file to make running the model more straightforward. 
+```R
+count <- 0
+for(i in 1:nrow(full.data)){
+ for (j in 1:nrow(species.map)){
+   if (species.map[j,11] - full.data[i,1] < 30 & species.map[j,11] - full.data[i,1] > 0 &
+                 species.map[j,12] - full.data[i,2] < 30 & species.map[j,12] - full.data[i,2] > 0){
+     count = count + 1
+     training$plot.id[count] <- i
+     training[count,-c(1)] <- c(full.data[i,1:2],species.map[j,1:8], full.data[i,3:10])
+   }
+ }
+}
+paste("Yes count:", count)
+nrow(training)
+```
+
+In this section of code, we assign the spatial resolution (the light bandwidth covariates and calculated fields) to each ordinal SERC plot if the difference between the two UTM coordinates falls within 30 meters. When there are multiple SERC plots in a resolution space, we duplicate those light band scores as a new row in our training set. The final assignment looks something like this.
+
+![Phrag abundance in resolution](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/phau_prediction_validation.png)
+*If you would like to visualize this figure yourself, run the code for the final visual (serc.plots) in the training.R file*
+
+That essentially wraps up our training set. The last two steps I am about to show are optional. The first step assigns a character string to each ordinal group. However, it has actually been pointed out to me that "few" and "little" are hard to differentiate so my recommendation would be to relabel them by their scales, like "less than 1%" or "1-20%", for more clarification. I will do this later in our final figures. Again, **this step is not necessary so long as you change the integers to factors before you run your final model.** The last step is to save your training set, which I saved into the <a href="https://github.com/adraper2/DISC_chesapeake/blob/master/training_set.rda">training_set.rda</a> file I mentioned at the beginning of this section. I would advise saving the file to make running the model more straightforward. If you would like to work with my specific dataset, you can download this repository and load my public training set.
 
 ```R
 # reassign ordinal values words
@@ -161,7 +182,7 @@ model
 
 save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep="")) # save your model for future predictions if you'd like
 ```
-You will see the out of bag error and class error of our model when you run "model". Do not be discouraged by the low number. I imagine that the out of bag error will be around 50%, which should mean that the model guesses the ordinal ranks incorrectly 50% of the time. Class error normally tells us how well it predicts an ordinal class. With that being said, it may be checking its prediction on an ordinal rank that represents a tiny proportion of the Landsat plot, which would mean that our model's prediction is not necessarily incorrect. Try running "hist(training$overlap)". Notice how right-skewed our data is. Almost half our data has ordinal scores that represent less than 10% of the landsat plot they are in. This leads to some skepticism in our model, but also reassures us that our model is not as inaccurate as it thinks it is. This will become more evident when we produce our visuals in the following section.
+You will see the out of bag error and class error of our model when you run "model". Do not be discouraged by the low number. I imagine that the out of bag error will be around 50%, which should mean that the model guesses the ordinal ranks incorrectly 50% of the time. Class error normally tells us how well it predicts an ordinal class. With that being said, it may be checking its prediction on an ordinal rank that represents a tiny proportion of the Landsat plot, which would mean that our model's prediction is not necessarily incorrect. When you see the final figure, you should be less discouraged by your results. If you notice, the model predicts one class, none (0%), with only 15 to 20 percent error. This means that our classifier for a specific species can still predict presence and absence from a spatial resolution with **80 to 85 percent accuracy**.
 
 ### Model Results:
 ![model results scam](https://raw.githubusercontent.com/adraper2/DISC_chesapeake/master/plots/scam_final.png)
