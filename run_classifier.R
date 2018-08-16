@@ -28,17 +28,17 @@ load(file='training_set.rda')
 
 set.seed(2000)
 
-curr.species = 'phau'
+curr.species = 'c4'
 current <- training[,which(names(training)==curr.species)]
 samp <- sample(nrow(training), .6 * nrow(training))
 train <- training[samp,]
 test <- training[-samp,]
 
-model = randomForest(phau ~ .,data = train[,-c(1:6,8:11,17)], keep.forest=TRUE)
+model = randomForest(c4 ~ .,data = train[,-c(1:5,7:11,17)], keep.forest=TRUE)
 
 model
 
-reprtree:::plot.getTree(model) #produce the random forest tree visual
+#reprtree:::plot.getTree(model) #produce the random forest tree visual
 
 #save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
 
@@ -57,14 +57,14 @@ plot(model, main="", cex.main=2, cex.lab=1.4, cex.axis=1.4)
 varImpPlot(model, main="", cex.main=2, cex.lab=1.4, cex.axis=1.4)
 
 pred <- predict(model, newdata = test)
-table(pred, test$phau)
+table(pred, test$c4)
 
 pred <- factor(pred, levels = c("0%", "less than 1%", "1 - 5%", "6% - 25%", "26 - 50%", "51 - 75%", "76% - 100%"))
 cols = c("0%"="#ceb467", "less than 1%" = "#ace5b2", "1 - 5%" = "#7aef87", "6% - 25%" = "#57d165", "26 - 50%" = "#21a31d", "51 - 75%" = "#197f24", "76% - 100%" = "#115118")
 
 pred.graph <- ggplot() +
   geom_rect(data=test, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30, fill = as.factor(unlist(pred))), color="black") +
-  labs(title=paste("Pop. Abundance Prediction on 40% of Plots"), x="Easting", y="Northing", fill="Cover") +
+  labs(title=paste(paste(curr.species,"Pop. Abundance Prediction on 40% of Plots")), x="Easting", y="Northing", fill="Cover") +
   scale_x_continuous(limits = c(365430, 366280)) +
   scale_y_continuous(limits = c(4303800, 4304470)) + 
   scale_fill_manual(values = cols)
@@ -76,7 +76,7 @@ pred.graph
 # predict all of data to see all classifications
 
 pred2 <- predict(model, newdata = training)
-table(pred2, training$phau)
+table(pred2, training$c4)
 pred2 <- factor(pred2, levels = c("0%", "less than 1%", "1 - 5%", "6% - 25%", "26 - 50%", "51 - 75%", "76% - 100%"))
 #cols = c("0%"="#ceb467", "less than 1%" = "#ace5b2", "1 - 5%" = "#7aef87", "6% - 25%" = "#57d165", "26 - 50%" = "#21a31d", "51 - 75%" = "#197f24", "76% - 100%" = "#115118")
 
@@ -90,7 +90,7 @@ cols = c("0%"="#ceb467", "less than 1%" = "#fce0e0", "1 - 5%" = "#ffa8a8", "6% -
 
 pred2.graph <- ggplot() +
   geom_rect(data=training, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30, fill = as.factor(unlist(pred2))), color="black") +
-  labs(title=paste("Phragmites Population Classifier Predictions"),x="Easting", y="Northing", fill="Cover") +
+  labs(title=paste("C4 Population Classifier Predictions"),x="Easting", y="Northing", fill="Cover") +
   scale_x_continuous(limits = c(365430, 366280)) +
   scale_y_continuous(limits = c(4303800, 4304470)) + 
   scale_fill_manual(values = cols) + theme(plot.background = element_rect(fill = 'white'),
