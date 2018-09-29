@@ -143,7 +143,7 @@ for (z in 4:11){
 
 #graph current species under landsat plots
 ggplot() + 
-  geom_rect(data=species.map, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 10)/30, ymin=(northing -min(training$northing))/30, ymax=(northing -min(training$northing) + 10)/30, fill = as.factor(unlist(species.map[3]))), color=NA) +
+  geom_rect(data=species.map, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 10)/30, ymin=(northing -min(training$northing))/30, ymax=(northing -min(training$northing) + 10)/30, fill = as.factor(unlist(species.map[4]))), color=NA) +
   labs(title=paste("Population Abundance"), x="X (30m increment)", y="Y (30m increment)", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=(easting - min(training$easting))/30, xmax=(easting - min(training$easting) + 30)/30, ymin=(northing-min(training$northing))/30, ymax=(northing + 30 - min(training$northing))/30), color="black", fill = NA)
 
@@ -159,20 +159,20 @@ for (sp in 1:8){
 }
 # for validation after model run
 
-species.map$c4 <- factor(species.map$c4, levels = c("0%", "less than 1%", "1 - 5%", "6% - 25%", "26 - 50%", "51 - 75%", "76% - 100%"))
+species.map$scam <- factor(species.map$scam, levels = c("0%", "less than 1%", "1 - 5%", "6% - 25%", "26 - 50%", "51 - 75%", "76% - 100%"))
 #cols = c("0%"="#ceb467", "less than 1%" = "#ace5b2", "1 - 5%" = "#7aef87", "6% - 25%" = "#57d165", "26 - 50%" = "#21a31d", "51 - 75%" = "#197f24", "76% - 100%" = "#115118")
 
 # red scale for Phrag
-cols = c("0%"="#ceb467", "less than 1%" = "#fce0e0", "1 - 5%" = "#ffa8a8", "6% - 25%" = "#f26a6a", "26 - 50%" = "#e83e3e", "51 - 75%" = "#c12020", "76% - 100%" = "#891818")
+#cols = c("0%"="#ceb467", "less than 1%" = "#fce0e0", "1 - 5%" = "#ffa8a8", "6% - 25%" = "#f26a6a", "26 - 50%" = "#e83e3e", "51 - 75%" = "#c12020", "76% - 100%" = "#891818")
 
 # blue scale for scam
-#cols = c("0%"="#ceb467", "less than 1%" = "#d1ddfc", "1 - 5%" = "#adc0f4", "6% - 25%" = "#8ba6f4", "26 - 50%" = "#5e82ed", "51 - 75%" = "#2c2ccc", "76% - 100%" = "#231572")
+cols = c("0%"="#ceb467", "less than 1%" = "#d1ddfc", "1 - 5%" = "#adc0f4", "6% - 25%" = "#8ba6f4", "26 - 50%" = "#5e82ed", "51 - 75%" = "#2c2ccc", "76% - 100%" = "#231572")
 
 
 
 serc.plots <- ggplot() + 
-  geom_rect(data=species.map, aes(xmin=easting, xmax=easting + 10, ymin=northing, ymax=northing + 10, fill = as.factor(unlist(species.map[3]))), color=NA) +
-  labs(title=paste("C4 Population Abundance in SERC Plots"), x="Easting", y="Northing", fill = "Cover") + 
+  geom_rect(data=species.map, aes(xmin=easting, xmax=easting + 10, ymin=northing, ymax=northing + 10, fill = as.factor(unlist(species.map[1]))), color=NA) +
+  labs(title=paste("scam Population Abundance in SERC Plots"), x="Easting", y="Northing", fill = "Cover") + 
   geom_rect(data=training, aes(xmin=easting, xmax=easting + 30, ymin=northing, ymax=northing + 30), color="black", fill = NA) +
   scale_x_continuous(limits = c(365430, 366280)) +
   scale_y_continuous(limits = c(4303800, 4304470)) +
