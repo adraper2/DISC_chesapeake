@@ -9,8 +9,8 @@ library(magrittr)
 library(randomForest)
 
 ###GLOBAL PARAMETERS
-image.date <- "03-28-2016"
-band.path <- "20170223"
+image.date <- "11-23-2016"
+band.path <- "20170219" #find this line after the date in the .TIF band file names
 landsat.path <- "~/../../Volumes/Draper_HD/Landsat_Photos/"
 
 z <- c(3,1,2)
@@ -24,6 +24,10 @@ rm(model)
 
 load(file = "Classifiers/scam_model.rda")
 scam_model <- model
+rm(model)
+
+load(file = "Classifiers/c4_model.rda")
+c4_model <- model
 rm(model)
 
 load(file="serc_data.rdata")
@@ -85,7 +89,10 @@ table(scam.pred)
 phau.pred <- predict(phau_model, newdata = cut.data)
 table(phau.pred)
 
-results <- data.frame(plot.id=cut.data$plot.id,easting=cut.data$easting,northing=cut.data$northing,phau.pred=as.vector(phau.pred),scam.pred=as.vector(scam.pred))
+c4.pred <- predict(c4_model, newdata = cut.data)
+table(c4.pred)
+
+results <- data.frame(plot.id=cut.data$plot.id,easting=cut.data$easting,northing=cut.data$northing,phau.pred=as.vector(phau.pred),scam.pred=as.vector(scam.pred), c4.pred=as.vector(c4.pred))
 
 save(results,file=paste(c("2016_Results/",image.date,"_results.rdata"),collapse=""))
 
