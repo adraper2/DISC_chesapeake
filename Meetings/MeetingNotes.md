@@ -19,12 +19,12 @@ We seem to most interested about identifying peak-greeness for the species *Scho
 We had multiple concerns that arose while discussing the past model. The first being that we were just using a single image (August 19th), which means that species that are not even close to suspected peak-greeness, like C4, are suffering at being identified. Another was that we haven't checked two details about the covariates we are using in the original model. This included colinearity in variables to see if they have the same variable importance when testing new datasets. The other sanity check was about variables being dependent or correlated with one another, which means they might be weighted too similarly in the way that they predict, which would mean there is bias in our covariates. Additionally, we mentioned that there is some consideration needed in sampling multiple plots from the same plot id. I will need to updates lines 37-40 in `run_classifier.R` file.
 
 **The tasks we mentioned were:**
-[ ] Looking at colinearity between variables (something that Megan and Haley may be able to do together): this may mean grabbing some covariates we weeded out from before
-[ ] **I meant to mention this during the skype call but, forgot. Megan mentioned that she had to look at the correlation between covariates because if there is too much correlation that can affect the model as well. This has not been done yet.**
+- [ ] Looking at colinearity between variables (something that Megan and Haley may be able to do together): this may mean grabbing some covariates we weeded out from before
+- [ ] **I meant to mention this during the skype call but, forgot. Megan mentioned that she had to look at the correlation between covariates because if there is too much correlation that can affect the model as well. This has not been done yet.**
 
 **My next steps are:**
-[ ] Creating a bulleted list of what will be included in the paper as of now
-[ ] Creating a collection of models based on **cloudless** images from 2015 to 2017 and rerunning the last code that tests the August model on those images
+- [ ] Creating a bulleted list of what will be included in the paper as of now
+- [ ] Creating a collection of models based on **cloudless** images from 2015 to 2017 and rerunning the last code that tests the August model on those images
 
 **The original model may need updates in these areas:**
 - Heterogeneity between covariates in case they are dependent on one another (which is probably true considering we use covariates made from bands and then also the bands themselves)
