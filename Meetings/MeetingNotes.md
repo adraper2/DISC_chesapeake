@@ -10,7 +10,7 @@ Today we discussed the next steps to the project. I will be talking about our di
 - Creating multiple models for each month using the current code
 - Exploring sampling techniques for spatial resolutions with multiple SERC plots: this included adding weights to the sample function in R, a clustered sampling approach based on plot, or sampling plots without replacement in general. We were somewhat worried about grabbing the *outlier* plot from a group of three where clearly the other two might be better fits to what the whole resolution describes
 - Creating a "best-fit" peak-greeness spatial resolution training set from multiple images
-- Heterogeneity in plots: comparing models
+- Heterogeneity in plots: comparing a model that uses multiple plots in the same resolution (our original model) vs. a model that uses a sampling technique to only use one plot in each resolution
 - Creating a statistical / probabilistic model that took into account multiple plots from different times periods
 - Considering the position that plots fit within the spatial resolution. For example, euclidean distance to the centroid of a resolution as a way to select what plots to use
 
