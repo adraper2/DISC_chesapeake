@@ -1,9 +1,9 @@
 # Meeting Notes - Post Skype call reflection
 
 I have recorded notes from meetings dated below. (Select a date to jump to that meeting's header.)
-> [November 20th, 2018](https://github.com/adraper2/DISC_chesapeake/tree/master/Meetings/MeetingNotes.md#November-20th,-2018)
+> [November 20th, 2018](https://github.com/adraper2/DISC_chesapeake/blob/master/Meetings/MeetingNotes.md#november-20th-2018)
 
-### November 20th, 2018
+### November 20th, 2018 (Meeting with Jason, Haley and Megan)
 Today we discussed the next steps to the project. I will be talking about our direction as well as my to-do list for the rest of the Fall semester. We also discussed a bunch of different methodologies/complexities that either directly relate to what we are currently working with or that might be interesting to look at in the future. 
 
 These directions included:
