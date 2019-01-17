@@ -2,6 +2,7 @@
 
 I have recorded notes from meetings dated below. (Select a date to jump to that meeting's header.)
 > [November 20th, 2018](https://github.com/adraper2/DISC_chesapeake/blob/master/Meetings/MeetingNotes.md#november-20th-2018-meeting-with-jason-haley-and-megan)
+
 > [January 10th, 2019](https://github.com/adraper2/DISC_chesapeake/blob/master/Meetings/MeetingNotes.md#january-10th-2019-meeting-with-jason-haley-and-megan)
 
 ### November 20th, 2018 (Meeting with Jason, Haley and Megan)
