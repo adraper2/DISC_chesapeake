@@ -36,13 +36,22 @@ set.seed(seed.num)
 
 current <- training[,which(names(training)==curr.species)]
 #samp <- sample(nrow(training), train.size * nrow(training))
-samp <- sample(unique(training$plot.id), train.size * length(unique(training$plot.id)), replace = FALSE)
-# vector of rows to usee
+samp <- sample(unique(training$plot.id), round(train.size * length(unique(training$plot.id))), replace = FALSE)
+# vector of rows to use (THERES A BUG HERE)
 samp.rows <- numeric(length(samp))
 for (x in 1:length(samp)){
-  samp.rows[x] <- (sample(which(samp[x] == training$plot.id), 1))
+  #cat(x, samp[x], 'options', which(samp[x] == training$plot.id), 'result',sample(which(samp[x] == training$plot.id), 1), '\n')
+  if (length(which(samp[x] == training$plot.id)) == 1){ # catches bug if sample only has one option to pick from
+    sampled <- which(samp[x] == training$plot.id)[1]
+  } else { # otherwise sample randomly from the vector of rows available
+    sampled <- (sample(which(samp[x] == training$plot.id), 1))
+    while(sampled %in% samp.rows){ # if somehow this row is in our list already, print (this should never happen)
+      cat('oof sampled:', sampled, 'samp:', samp[x], 'pos:', x,'\n')
+      sampled <- (sample(which(samp[x] == training$plot.id), 1))
+    }
+  }
+  samp.rows[x] <- sampled
 }
-samp.rows
 
 train <- droplevels(training[samp.rows,])
 test <- droplevels(training[-samp.rows,])
