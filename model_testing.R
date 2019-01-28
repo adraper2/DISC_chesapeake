@@ -8,8 +8,12 @@ library(raster)
 library(magrittr)
 library(randomForest)
 
+
+### NEED TO ADD REFLECTANCE CONVERSION SECTION BEFORE TESTING IMAGES!!!
+
+
 ###GLOBAL PARAMETERS
-image.date <- "11-23-2016"
+image.date <- "11-23-2016" # try 07-02-2016 or 07-18-2016
 band.path <- "20170219" #find this line after the date in the .TIF band file names
 landsat.path <- "~/../../Volumes/Draper_HD/Landsat_Photos/"
 

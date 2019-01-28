@@ -27,7 +27,7 @@ load(file='training_set.rda')
 
 
 ### PARAMETER VARIABLES
-curr.species = 'scam'
+curr.species = 'c4'
 train.size = .8
 cols.in.training = c(12:16,18:19)
 seed.num = 2000
@@ -60,7 +60,8 @@ model = randomForest(train[,which(names(training)==curr.species)] ~ .,data = tra
 
 model
 
-rm(model)
+save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
+#rm(model)
 
 set.seed(seed.num)
 # get model accuracy over a number of trials
@@ -91,8 +92,6 @@ avg.oob <- sum.of.oob/length(seed.range)
 avg.oob
 
 #reprtree:::plot.getTree(model) #produce the random forest tree visual
-
-#save(model, file=paste("Classifiers/",curr.species,"_model.rda",sep=""))
 
 #par(bg = '#ecf0f8f9')
 #plot(0, 0, type="n", ann=FALSE, axes=FALSE)

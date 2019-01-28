@@ -9,6 +9,8 @@ library(magrittr)
 library(rgdal)
 library(ggplot2)
 
+# NEED TO ADD REFLECTANCE CONVERSION SECTION BEFORE TESTING IMAGES!!!
+
 
 setwd("~/Documents/Junior_Year/DISC_REU/DISC_chesapeake/")
 
